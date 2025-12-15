@@ -3,11 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="MissingLeanbackLauncher">
 
+    <!-- Required for loading M3U8 / streaming video -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-feature
         android:name="android.hardware.touchscreen"
         android:required="false" />
+
     <uses-feature
         android:name="android.software.leanback"
         android:required="true" />
@@ -23,12 +25,12 @@
         android:icon="@mipmap/ic_launcher"
         android:banner="@mipmap/ic_banner"
         android:theme="@style/Theme.ProjectivyWallpaperProvider">
+
         <activity
             android:name=".SettingsActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
@@ -43,43 +45,43 @@
             android:banner="@mipmap/ic_banner"
             tools:ignore="ExportedService">
 
-            <!-- Mandatory for the plugin to be detected, DO NOT CHANGE -->
+            <!-- Mandatory for Projectivy to detect the plugin -->
             <intent-filter>
-                <action android:name="tv.projectivy.plugin.WALLPAPER_PROVIDER"/>
+                <action android:name="tv.projectivy.plugin.WALLPAPER_PROVIDER" />
             </intent-filter>
 
-            <!-- Api version this plugin is compatible with -->
+            <!-- Projectivy API version -->
             <meta-data
                 android:name="apiVersion"
-                android:value="1"/>
+                android:value="1" />
 
-            <!--Plugin UUID *** YOU NEED TO CHANGE IT *** -->
-            <!--https://www.uuidgenerator.net/version4 -->
+            <!-- Plugin UUID (must be unique) -->
             <meta-data
                 android:name="uuid"
-                android:value="@string/plugin_uuid"/>
+                android:value="@string/plugin_uuid" />
 
             <!-- Plugin name -->
             <meta-data
                 android:name="name"
-                android:value="@string/plugin_short_name"/>
+                android:value="@string/plugin_short_name" />
 
-            <!-- Plugin activity called by Projectivy to configure it -->
+            <!-- Settings activity -->
             <meta-data
                 android:name="settingsActivity"
-                android:value=".SettingsActivity"/>
+                android:value=".SettingsActivity" />
 
-            <!-- How long should Projectivy keep wallpapers before a new request -->
+            <!-- 🔥 IMPORTANT: Disable caching for M3U8 / live streams -->
             <meta-data
                 android:name="itemsCacheDurationMillis"
-                android:value="@integer/items_cache_duration_millis"/>
+                android:value="0" />
 
-            <!-- This sample plugin will receive time_elapsed events -->
+            <!-- Receive time_elapsed update events -->
             <meta-data
                 android:name="updateMode"
-                android:value="1"/>
+                android:value="1" />
         </service>
 
     </application>
 
 </manifest>
+
