@@ -77,9 +77,8 @@ android {
 
    buildFeatures {
     buildConfig true
+    }
 }
-}
-
 dependencies {
     implementation("androidx.core:core-ktx:1.17.0")
     implementation("androidx.leanback:leanback:1.2.0")
