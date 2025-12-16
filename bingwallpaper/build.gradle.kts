@@ -31,11 +31,12 @@ android {
     }
 
     signingConfigs {
-        create("genericRelease") {
-            keyAlias = gradleLocalProperties(rootDir, providers).getProperty("GENERIC_KEY_ALIAS")
-            keyPassword = gradleLocalProperties(rootDir, providers).getProperty("GENERIC_KEY_PASSWORD")
-            storeFile = file(gradleLocalProperties(rootDir, providers).getProperty("GENERIC_STORE_FILE"))
-            storePassword = gradleLocalProperties(rootDir, providers).getProperty("GENERIC_STORE_PASSWORD")
+        buildTypes {
+    release {
+        isMinifyEnabled = false
+        signingConfig = signingConfigs.getByName("debug")
+    }
+}
         }
         create("playstoreRelease") {
             keyAlias = gradleLocalProperties(rootDir, providers).getProperty("PLAYSTORE_KEY_ALIAS")
