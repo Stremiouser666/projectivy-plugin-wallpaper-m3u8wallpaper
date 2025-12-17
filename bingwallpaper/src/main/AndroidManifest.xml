@@ -19,6 +19,7 @@
     </queries>
 
     <application
+        android:theme="@style/Theme.Leanback"
         android:allowBackup="true"
         android:label="@string/plugin_name"
         android:supportsRtl="true"
