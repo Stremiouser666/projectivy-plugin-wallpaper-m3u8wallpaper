@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Placeholder theme to allow standalone build -->
+    <style name="Theme.Leanback" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Standard placeholder colors -->
+        <item name="colorPrimary">#6200EE</item>
+        <item name="colorPrimaryVariant">#3700B3</item>
+        <item name="colorAccent">#03DAC5</item>
+    </style>
+</resources>
+
