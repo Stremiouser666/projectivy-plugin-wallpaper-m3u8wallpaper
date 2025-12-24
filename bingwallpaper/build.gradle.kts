@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    id("com.android.application")  // Changed from library to application
     id("org.jetbrains.kotlin.android")
 }
 
@@ -8,7 +8,10 @@ android {
     compileSdk = 34
 
     defaultConfig {
+        applicationId = "tv.projectivy.plugin.wallpaperprovider.bingwallpaper"  // Added this
         minSdk = 21
+        versionCode = 1
+        versionName = "1.0"
         
         buildConfigField("String", "VERSION_NAME", "\"1.0.0\"")
     }
@@ -29,7 +32,7 @@ android {
 }
 
 dependencies {
-    // Projectivy API (need to add this - it's in your /api folder)
+    // Projectivy API
     implementation(project(":api"))
     
     // AndroidX Media3 (ExoPlayer)
@@ -43,7 +46,7 @@ dependencies {
     implementation("androidx.leanback:leanback-preference:1.0.0")
     implementation("androidx.preference:preference-ktx:1.2.1")
     
-    // Material Design (fixes colorPrimaryVariant error)
+    // Material Design
     implementation("com.google.android.material:material:1.11.0")
     
     // Networking
