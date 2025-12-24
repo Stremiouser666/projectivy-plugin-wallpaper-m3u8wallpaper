@@ -29,4 +29,4 @@ android {
 dependencies {
     // AndroidX Annotations (for @IntDef)
     implementation("androidx.annotation:annotation:1.7.1")
-}
+} 
