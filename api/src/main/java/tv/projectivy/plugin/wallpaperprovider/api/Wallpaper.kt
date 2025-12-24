@@ -1,51 +1,49 @@
-package tv.projectivy.plugin.wallpaperprovider.api
+package tv.projectivy.plugin.wallpaperprovider.bingwallpaper
 
-import android.os.Parcelable
-import androidx.annotation.IntDef
-import kotlinx.parcelize.Parcelize
-import tv.projectivy.plugin.wallpaperprovider.api.WallpaperDisplayMode.Companion.BLUR
-import tv.projectivy.plugin.wallpaperprovider.api.WallpaperDisplayMode.Companion.CROP
-import tv.projectivy.plugin.wallpaperprovider.api.WallpaperDisplayMode.Companion.DEFAULT
-import tv.projectivy.plugin.wallpaperprovider.api.WallpaperDisplayMode.Companion.STRETCH
-import tv.projectivy.plugin.wallpaperprovider.api.WallpaperType.Companion.ANIMATED_DRAWABLE
-import tv.projectivy.plugin.wallpaperprovider.api.WallpaperType.Companion.DRAWABLE
-import tv.projectivy.plugin.wallpaperprovider.api.WallpaperType.Companion.IMAGE
-import tv.projectivy.plugin.wallpaperprovider.api.WallpaperType.Companion.LOTTIE
-import tv.projectivy.plugin.wallpaperprovider.api.WallpaperType.Companion.VIDEO
+import android.app.Service
+import android.content.Intent
+import android.os.IBinder
+import android.util.Log
+import tv.projectivy.plugin.wallpaperprovider.api.Event
+import tv.projectivy.plugin.wallpaperprovider.api.IWallpaperProviderService
+import tv.projectivy.plugin.wallpaperprovider.api.Wallpaper
+import tv.projectivy.plugin.wallpaperprovider.api.WallpaperDisplayMode
+import tv.projectivy.plugin.wallpaperprovider.api.WallpaperType
 
+class WallpaperProviderService : Service() {
 
-@Target(AnnotationTarget.TYPE)
-@Retention(AnnotationRetention.SOURCE)
-@IntDef(IMAGE, DRAWABLE, ANIMATED_DRAWABLE, LOTTIE, VIDEO)
-annotation class WallpaperType {
-    companion object {
-        const val IMAGE = 0
-        const val DRAWABLE = 1
-        const val ANIMATED_DRAWABLE = 2
-        const val LOTTIE = 3
-        const val VIDEO = 4
+    override fun onBind(intent: Intent?): IBinder {
+        return binder
+    }
+
+    private val binder = object : IWallpaperProviderService.Stub() {
+
+        override fun getWallpapers(event: Event?): MutableList<Wallpaper> {
+            
+            // Get the M3U8 URL from preferences or use default
+            val hlsUrl = PreferencesManager.wallpaperSourceUrl 
+                ?: "https://example.com/stream/playlist.m3u8"
+
+            Log.d("BingWallpaper", "Sending HLS wallpaper: $hlsUrl")
+
+            return mutableListOf(
+                Wallpaper(
+                    uri = hlsUrl,
+                    type = WallpaperType.VIDEO,
+                    displayMode = WallpaperDisplayMode.CROP,
+                    title = "M3U8 Video Wallpaper"
+                )
+            )
+        }
+
+        override fun getEvents(): MutableList<Event>? = null
+
+        override fun getPreferences(): String {
+            return PreferencesManager.export()
+        }
+
+        override fun setPreferences(params: String) {
+            PreferencesManager.import(params)
+        }
     }
 }
-
-@Target(AnnotationTarget.TYPE, AnnotationTarget.VALUE_PARAMETER)
-@Retention(AnnotationRetention.SOURCE)
-@IntDef(DEFAULT, CROP, STRETCH, BLUR)
-annotation class WallpaperDisplayMode {
-    companion object {
-        const val DEFAULT = 0
-        const val CROP = 1
-        const val STRETCH = 2
-        const val BLUR = 3
-    }
-}
-
-@Parcelize
-data class Wallpaper(
-    val uri: String,
-    val type: @WallpaperType Int = IMAGE,
-    val displayMode: @WallpaperDisplayMode Int = CROP,
-    val title: String? = null,
-    val source: String? = null,
-    val author: String? = null,
-    val actionUri: String? = null
-) : Parcelable
