@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -23,4 +24,11 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+}
+
+dependencies {
+    // AndroidX Annotations (for @IntDef)
+    implementation("androidx.annotation:annotation:1.7.1")
+    
+    // Kotlin Parcelize is handled by the plugin above
 }
