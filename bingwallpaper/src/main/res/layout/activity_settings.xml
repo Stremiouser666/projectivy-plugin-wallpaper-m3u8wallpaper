@@ -1,38 +1,189 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="24dp"
-    android:gravity="center">
+    android:padding="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="M3U8 Wallpaper Settings"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="24dp"/>
-
-    <EditText
-        android:id="@+id/m3u8_url_input"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter M3U8 URL"
-        android:inputType="textUri"
-        android:layout_marginBottom="16dp"/>
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/test_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Test Stream"
-        android:layout_marginBottom="8dp"/>
+        <!-- Header -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/plugin_name"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="16dp" />
 
-    <Button
-        android:id="@+id/save_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save"/>
+        <!-- Bing Checkbox -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="16dp">
+            <CheckBox
+                android:id="@+id/bing_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Include Bing Daily Wallpapers"
+                android:textSize="16sp"
+                android:gravity="center_vertical"
+                android:paddingStart="8dp" />
+        </LinearLayout>
 
-</LinearLayout>
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#cccccc"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Add Custom Source Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Custom Source (Image or M3U8 Stream)"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingBottom="12dp" />
+
+        <!-- Title Input -->
+        <EditText
+            android:id="@+id/title_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Source Title"
+            android:inputType="text"
+            android:paddingBottom="8dp" />
+
+        <!-- URL Input -->
+        <EditText
+            android:id="@+id/url_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="URL (https://...)"
+            android:inputType="text"
+            android:paddingBottom="8dp" />
+
+        <!-- Description Input -->
+        <EditText
+            android:id="@+id/description_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Description (optional)"
+            android:inputType="text"
+            android:paddingBottom="8dp" />
+
+        <!-- Thumbnail Input -->
+        <EditText
+            android:id="@+id/thumbnail_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Thumbnail URL (optional)"
+            android:inputType="text"
+            android:paddingBottom="12dp" />
+
+        <!-- Type Radio Group -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Content Type"
+            android:textSize="14sp"
+            android:paddingBottom="8dp" />
+
+        <RadioGroup
+            android:id="@+id/type_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="12dp">
+
+            <RadioButton
+                android:id="@+id/type_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Image"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/type_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Video (M3U8 Stream)" />
+
+        </RadioGroup>
+
+        <!-- Add Button -->
+        <Button
+            android:id="@+id/add_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Source"
+            android:textSize="16sp"
+            android:padding="12dp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#cccccc"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Custom Sources List -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Current Sources"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:paddingBottom="8dp" />
+
+            <TextView
+                android:id="@+id/source_list_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:paddingBottom="12dp" />
+
+            <Button
+                android:id="@+id/refresh_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Refresh List"
+                android:textSize="14sp"
+                android:padding="8dp" />
+
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#cccccc"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Projectivy Check -->
+        <Button
+            android:id="@+id/projectivy_check_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Check Projectivy Installation"
+            android:textSize="14sp"
+            android:padding="12dp" />
+
+    </LinearLayout>
+
+</ScrollView>
