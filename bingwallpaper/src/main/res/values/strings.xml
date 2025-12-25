@@ -12,4 +12,5 @@
     <!-- Setting parameters -->
     <string name="settings">Wallpaper settings</string>
     <string name="setting_video_source">Wallpaper source</string>
+<integer name="items_cache_duration_millis">86400000</integer>
 </resources>
