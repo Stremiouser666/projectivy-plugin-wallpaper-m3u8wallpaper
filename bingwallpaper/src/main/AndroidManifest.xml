@@ -1,3 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat">
+
+        <!-- Settings Activity -->
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.AppCompat">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Wallpaper Provider Service -->
+        <service
+            android:name=".WallpaperProviderService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="tv.projectivy.plugin.wallpaperprovider.WALLPAPER_PROVIDER" />
+            </intent-filter>
+            <meta-data
+                android:name="tv.projectivy.plugin.wallpaperprovider.name"
+                android:value="@string/app_name" />
+        </service>
+
+    </application>
+
 </manifest>
