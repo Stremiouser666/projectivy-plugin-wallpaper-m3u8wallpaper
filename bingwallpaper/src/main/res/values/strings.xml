@@ -7,7 +7,7 @@
 
     <!--Plugin UUID *** YOU NEED TO CHANGE IT *** -->
     <!--https://www.uuidgenerator.net/version4 -->
-    <string name="plugin_uuid">638363af-93ab-4d9f-bbc1-7a177535dfdd</string>
+    <string name="plugin_uuid">31c9b5e7-740c-4758-88d3-ccef186be84c</string>
 
     <!-- Setting parameters -->
     <string name="settings">Wallpaper settings</string>
