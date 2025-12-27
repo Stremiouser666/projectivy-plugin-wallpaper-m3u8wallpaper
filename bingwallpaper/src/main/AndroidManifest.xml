@@ -32,12 +32,26 @@
             <intent-filter>
                 <action android:name="tv.projectivy.plugin.wallpaperprovider.WALLPAPER_PROVIDER" />
             </intent-filter>
+            
+            <!-- Required meta-data for Projectivy -->
+            <meta-data
+                android:name="tv.projectivy.plugin.wallpaperprovider.apiVersion"
+                android:value="1" />
+            <meta-data
+                android:name="tv.projectivy.plugin.wallpaperprovider.uuid"
+                android:value="@string/plugin_uuid" />
             <meta-data
                 android:name="tv.projectivy.plugin.wallpaperprovider.name"
                 android:value="@string/plugin_short_name" />
             <meta-data
-                android:name="tv.projectivy.plugin.wallpaperprovider.uuid"
-                android:value="@string/plugin_uuid" />
+                android:name="tv.projectivy.plugin.wallpaperprovider.settingsActivity"
+                android:value="tv.projectivy.plugin.wallpaperprovider.bingwallpaper.SettingsActivity" />
+            <meta-data
+                android:name="tv.projectivy.plugin.wallpaperprovider.itemsCacheDurationMillis"
+                android:value="43200000" />
+            <meta-data
+                android:name="tv.projectivy.plugin.wallpaperprovider.updateMode"
+                android:value="1" />
         </service>
 
     </application>
