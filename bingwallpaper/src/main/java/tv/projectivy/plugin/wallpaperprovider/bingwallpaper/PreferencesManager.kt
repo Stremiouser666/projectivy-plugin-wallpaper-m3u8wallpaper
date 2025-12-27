@@ -10,7 +10,7 @@ import com.google.gson.reflect.TypeToken
 
 object PreferencesManager {
     lateinit var preferences: SharedPreferences
-    const val DEFAULT_WALLPAPER_SOURCE_URL = "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=8"
+    const val DEFAULT_WALLPAPER_SOURCE_URL = "https://river-3-375.rtbcdn.ru/hls-vod/QjodyPbtvWIQ-hJYUX7ssg/1767111061/2177/0x5000c500e75007a3/1562ad8e12ef48fca264343e95b1d221.mp4.m3u8?i=1920x1080_10995"
 
     fun init(context: Context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context)
