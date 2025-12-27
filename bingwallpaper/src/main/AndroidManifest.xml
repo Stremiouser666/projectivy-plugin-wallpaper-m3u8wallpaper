@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingLeanbackLauncher">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -19,6 +28,7 @@
             android:theme="@style/Theme.AppCompat">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
@@ -28,29 +38,35 @@
         <service
             android:name=".WallpaperProviderService"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/plugin_name"
+            android:icon="@mipmap/ic_banner"
+            android:banner="@mipmap/ic_banner"
+            tools:ignore="ExportedService">
+            
+            <!-- CRITICAL: Use the SHORT action name -->
             <intent-filter>
-                <action android:name="tv.projectivy.plugin.WALLPAPER_PROVIDER"/>
+                <action android:name="tv.projectivy.plugin.WALLPAPER_PROVIDER" />
             </intent-filter>
             
-            <!-- Required meta-data for Projectivy -->
+            <!-- Use SHORT meta-data names -->
             <meta-data
-                android:name="tv.projectivy.plugin.wallpaperprovider.apiVersion"
+                android:name="apiVersion"
                 android:value="1" />
             <meta-data
-                android:name="tv.projectivy.plugin.wallpaperprovider.uuid"
+                android:name="uuid"
                 android:value="@string/plugin_uuid" />
             <meta-data
-                android:name="tv.projectivy.plugin.wallpaperprovider.name"
+                android:name="name"
                 android:value="@string/plugin_short_name" />
             <meta-data
-                android:name="tv.projectivy.plugin.wallpaperprovider.settingsActivity"
-                android:value="tv.projectivy.plugin.wallpaperprovider.bingwallpaper.SettingsActivity" />
+                android:name="settingsActivity"
+                android:value=".SettingsActivity" />
             <meta-data
-                android:name="tv.projectivy.plugin.wallpaperprovider.itemsCacheDurationMillis"
+                android:name="itemsCacheDurationMillis"
                 android:value="43200000" />
             <meta-data
-                android:name="tv.projectivy.plugin.wallpaperprovider.updateMode"
+                android:name="updateMode"
                 android:value="1" />
         </service>
 
