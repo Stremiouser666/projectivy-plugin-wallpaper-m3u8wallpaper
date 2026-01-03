@@ -14,60 +14,67 @@ class WallpaperProviderService : WallpaperProvider() {
         private const val TAG = "M3U8WallpaperProvider"
     }
 
-    override fun createEngine(): Engine {
-        return VideoWallpaperEngine()
+    override fun onCreateEngine(): WallpaperProvider.VideoEngine {
+        return M3U8VideoEngine()
     }
 
-    private inner class VideoWallpaperEngine : Engine() {
+    private inner class M3U8VideoEngine : VideoEngine() {
 
         private var player: ExoPlayer? = null
         private var currentUrl: String? = null
         
         // ⭐ NEW: Track visibility and surface state
-        private var isVisible = false
+        private var isWallpaperVisible = false
         private var hasSurface = false
         private var savedPosition: Long = 0
         
         // ⭐ NEW: Determine if we should play
         private val shouldPlay: Boolean
-            get() = isVisible && hasSurface
+            get() = isWallpaperVisible && hasSurface
 
-        override fun onCreate(surfaceHolder: SurfaceHolder?) {
-            super.onCreate(surfaceHolder)
+        override fun onSurfaceCreated(holder: SurfaceHolder) {
+            super.onSurfaceCreated(holder)
+            hasSurface = true
+            Log.d(TAG, "Surface created")
             
-            Log.d(TAG, "VideoWallpaperEngine created")
-            
-            // Initialize ExoPlayer
-            player = ExoPlayer.Builder(this@WallpaperProviderService).build().apply {
-                repeatMode = Player.REPEAT_MODE_ALL
-                playWhenReady = false  // Don't auto-play yet, wait for visibility
-                
-                addListener(object : Player.Listener {
-                    override fun onPlaybackStateChanged(playbackState: Int) {
-                        when (playbackState) {
-                            Player.STATE_READY -> {
-                                Log.d(TAG, "Player ready")
-                            }
-                            Player.STATE_ENDED -> {
-                                Log.d(TAG, "Player ended")
-                            }
-                            Player.STATE_BUFFERING -> {
-                                Log.d(TAG, "Player buffering")
-                            }
-                            Player.STATE_IDLE -> {
-                                Log.d(TAG, "Player idle")
+            // Initialize ExoPlayer if not already created
+            if (player == null) {
+                player = ExoPlayer.Builder(this@WallpaperProviderService).build().apply {
+                    repeatMode = Player.REPEAT_MODE_ALL
+                    playWhenReady = false  // Don't auto-play yet, wait for visibility
+                    
+                    addListener(object : Player.Listener {
+                        override fun onPlaybackStateChanged(playbackState: Int) {
+                            when (playbackState) {
+                                Player.STATE_READY -> Log.d(TAG, "Player ready")
+                                Player.STATE_ENDED -> Log.d(TAG, "Player ended")
+                                Player.STATE_BUFFERING -> Log.d(TAG, "Player buffering")
+                                Player.STATE_IDLE -> Log.d(TAG, "Player idle")
                             }
                         }
-                    }
 
-                    override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
-                        Log.e(TAG, "Player error: ${error.message}", error)
-                    }
-                })
+                        override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
+                            Log.e(TAG, "Player error: ${error.message}", error)
+                        }
+                    })
+                    
+                    setVideoSurfaceHolder(holder)
+                }
+                
+                // Load wallpaper URL
+                loadWallpaper()
+            } else {
+                // Re-attach surface to existing player
+                player?.setVideoSurfaceHolder(holder)
             }
             
-            // Load wallpaper URL
-            loadWallpaper()
+            // Restore position when surface is recreated
+            if (savedPosition > 0) {
+                player?.seekTo(savedPosition)
+                Log.d(TAG, "Restored position after surface created: ${savedPosition / 1000}s")
+            }
+            
+            updatePlaybackState()
         }
 
         private fun loadWallpaper() {
@@ -104,36 +111,19 @@ class WallpaperProviderService : WallpaperProvider() {
         // ⭐ NEW: Handle visibility changes
         override fun onVisibilityChanged(visible: Boolean) {
             super.onVisibilityChanged(visible)
-            isVisible = visible
+            isWallpaperVisible = visible
             Log.d(TAG, "Visibility changed: $visible")
             updatePlaybackState()
         }
 
-        // ⭐ NEW: Handle surface creation
-        override fun onSurfaceCreated(holder: SurfaceHolder?) {
-            super.onSurfaceCreated(holder)
-            hasSurface = true
-            Log.d(TAG, "Surface created")
-            
-            player?.setVideoSurfaceHolder(holder)
-            
-            // Restore position when surface is recreated
-            if (savedPosition > 0) {
-                player?.seekTo(savedPosition)
-                Log.d(TAG, "Restored position after surface created: ${savedPosition / 1000}s")
-            }
-            
-            updatePlaybackState()
-        }
-
-        // ⭐ NEW: Handle surface changes
-        override fun onSurfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
+        // ⭐ MODIFIED: Handle surface changes
+        override fun onSurfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
             super.onSurfaceChanged(holder, format, width, height)
             Log.d(TAG, "Surface changed: ${width}x${height}")
         }
 
-        // ⭐ NEW: Handle surface destruction
-        override fun onSurfaceDestroyed(holder: SurfaceHolder?) {
+        // ⭐ MODIFIED: Handle surface destruction
+        override fun onSurfaceDestroyed(holder: SurfaceHolder) {
             super.onSurfaceDestroyed(holder)
             hasSurface = false
             
@@ -150,10 +140,10 @@ class WallpaperProviderService : WallpaperProvider() {
             
             if (shouldPlay) {
                 player.play()
-                Log.d(TAG, "▶️ Playing (visible: $isVisible, surface: $hasSurface, position: ${player.currentPosition / 1000}s)")
+                Log.d(TAG, "▶️ Playing (visible: $isWallpaperVisible, surface: $hasSurface, position: ${player.currentPosition / 1000}s)")
             } else {
                 player.pause()
-                Log.d(TAG, "⏸️ Paused (visible: $isVisible, surface: $hasSurface, position: ${player.currentPosition / 1000}s)")
+                Log.d(TAG, "⏸️ Paused (visible: $isWallpaperVisible, surface: $hasSurface, position: ${player.currentPosition / 1000}s)")
             }
         }
 
@@ -162,7 +152,7 @@ class WallpaperProviderService : WallpaperProvider() {
             val position = player?.currentPosition ?: 0
             if (position > 0) {
                 try {
-                    getSharedPreferences("wallpaper_prefs", Context.MODE_PRIVATE)
+                    this@WallpaperProviderService.getSharedPreferences("wallpaper_prefs", Context.MODE_PRIVATE)
                         .edit()
                         .putLong("saved_position", position)
                         .putLong("saved_timestamp", System.currentTimeMillis())
@@ -178,7 +168,7 @@ class WallpaperProviderService : WallpaperProvider() {
         // ⭐ NEW: Restore saved position from SharedPreferences
         private fun restoreSavedPosition() {
             try {
-                val prefs = getSharedPreferences("wallpaper_prefs", Context.MODE_PRIVATE)
+                val prefs = this@WallpaperProviderService.getSharedPreferences("wallpaper_prefs", Context.MODE_PRIVATE)
                 val savedPos = prefs.getLong("saved_position", 0)
                 val timestamp = prefs.getLong("saved_timestamp", 0)
                 val savedUrl = prefs.getString("saved_url", null)
@@ -187,7 +177,7 @@ class WallpaperProviderService : WallpaperProvider() {
                 // 1. Position was saved
                 // 2. It's for the same URL
                 // 3. It was saved within the last hour
-                val hoursSince = (System.currentTimeMillis() - timestamp) / (1000 * 60 * 60)
+                val hoursSince = (System.currentTimeMillis() - timestamp) / (1000L * 60L * 60L)
                 
                 if (savedPos > 0 && savedUrl == currentUrl && hoursSince < 1) {
                     savedPosition = savedPos
