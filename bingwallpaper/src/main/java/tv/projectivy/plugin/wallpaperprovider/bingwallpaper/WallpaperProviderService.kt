@@ -82,7 +82,7 @@ class WallpaperProviderService : WallpaperProvider() {
                 PreferencesManager.init(applicationContext)
                 val url = PreferencesManager.wallpaperSourceUrl
                 
-                if (url.isNullOrBlank()) {
+                if (url.isBlank()) {
                     Log.e(TAG, "No wallpaper URL configured")
                     return
                 }
