@@ -23,12 +23,12 @@ class WallpaperProviderService : WallpaperProvider() {
         private var player: ExoPlayer? = null
         private var currentUrl: String? = null
         
-        // ⭐ NEW: Track visibility and surface state
+        // Track visibility and surface state
         private var isWallpaperVisible = false
         private var hasSurface = false
         private var savedPosition: Long = 0
         
-        // ⭐ NEW: Determine if we should play
+        // Determine if we should play
         private val shouldPlay: Boolean
             get() = isWallpaperVisible && hasSurface
 
@@ -39,7 +39,7 @@ class WallpaperProviderService : WallpaperProvider() {
             
             // Initialize ExoPlayer if not already created
             if (player == null) {
-                player = ExoPlayer.Builder(this@WallpaperProviderService).build().apply {
+                player = ExoPlayer.Builder(applicationContext).build().apply {
                     repeatMode = Player.REPEAT_MODE_ALL
                     playWhenReady = false  // Don't auto-play yet, wait for visibility
                     
@@ -79,7 +79,7 @@ class WallpaperProviderService : WallpaperProvider() {
 
         private fun loadWallpaper() {
             try {
-                PreferencesManager.init(this@WallpaperProviderService)
+                PreferencesManager.init(applicationContext)
                 val url = PreferencesManager.wallpaperSourceUrl
                 
                 if (url.isNullOrBlank()) {
@@ -108,7 +108,7 @@ class WallpaperProviderService : WallpaperProvider() {
             }
         }
 
-        // ⭐ NEW: Handle visibility changes
+        // Handle visibility changes
         override fun onVisibilityChanged(visible: Boolean) {
             super.onVisibilityChanged(visible)
             isWallpaperVisible = visible
@@ -116,13 +116,13 @@ class WallpaperProviderService : WallpaperProvider() {
             updatePlaybackState()
         }
 
-        // ⭐ MODIFIED: Handle surface changes
+        // Handle surface changes
         override fun onSurfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
             super.onSurfaceChanged(holder, format, width, height)
             Log.d(TAG, "Surface changed: ${width}x${height}")
         }
 
-        // ⭐ MODIFIED: Handle surface destruction
+        // Handle surface destruction
         override fun onSurfaceDestroyed(holder: SurfaceHolder) {
             super.onSurfaceDestroyed(holder)
             hasSurface = false
@@ -134,7 +134,7 @@ class WallpaperProviderService : WallpaperProvider() {
             updatePlaybackState()
         }
 
-        // ⭐ NEW: Central playback control based on visibility and surface
+        // Central playback control based on visibility and surface
         private fun updatePlaybackState() {
             val player = player ?: return
             
@@ -147,12 +147,12 @@ class WallpaperProviderService : WallpaperProvider() {
             }
         }
 
-        // ⭐ NEW: Save position to SharedPreferences on destroy
+        // Save position to SharedPreferences on destroy
         private fun savePositionToDisk() {
             val position = player?.currentPosition ?: 0
             if (position > 0) {
                 try {
-                    this@WallpaperProviderService.getSharedPreferences("wallpaper_prefs", Context.MODE_PRIVATE)
+                    applicationContext.getSharedPreferences("wallpaper_prefs", Context.MODE_PRIVATE)
                         .edit()
                         .putLong("saved_position", position)
                         .putLong("saved_timestamp", System.currentTimeMillis())
@@ -165,10 +165,10 @@ class WallpaperProviderService : WallpaperProvider() {
             }
         }
 
-        // ⭐ NEW: Restore saved position from SharedPreferences
+        // Restore saved position from SharedPreferences
         private fun restoreSavedPosition() {
             try {
-                val prefs = this@WallpaperProviderService.getSharedPreferences("wallpaper_prefs", Context.MODE_PRIVATE)
+                val prefs = applicationContext.getSharedPreferences("wallpaper_prefs", Context.MODE_PRIVATE)
                 val savedPos = prefs.getLong("saved_position", 0)
                 val timestamp = prefs.getLong("saved_timestamp", 0)
                 val savedUrl = prefs.getString("saved_url", null)
@@ -177,7 +177,8 @@ class WallpaperProviderService : WallpaperProvider() {
                 // 1. Position was saved
                 // 2. It's for the same URL
                 // 3. It was saved within the last hour
-                val hoursSince = (System.currentTimeMillis() - timestamp) / (1000L * 60L * 60L)
+                val currentTime = System.currentTimeMillis()
+                val hoursSince = (currentTime - timestamp) / (1000L * 60L * 60L)
                 
                 if (savedPos > 0 && savedUrl == currentUrl && hoursSince < 1) {
                     savedPosition = savedPos
