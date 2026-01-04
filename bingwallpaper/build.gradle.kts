@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.application")  // Changed from library to application
+    id("com.android.application")
     id("org.jetbrains.kotlin.android")
 }
 
@@ -8,8 +8,9 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "tv.projectivy.plugin.wallpaperprovider.bingwallpaper"  // Added this
+        applicationId = "tv.projectivy.plugin.wallpaperprovider.bingwallpaper"
         minSdk = 21
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
         
@@ -19,6 +20,16 @@ android {
     buildFeatures {
         buildConfig = true
         aidl = true
+    }
+    
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
     }
     
     compileOptions {
@@ -39,7 +50,6 @@ dependencies {
     implementation("androidx.media3:media3-exoplayer:1.2.1")
     implementation("androidx.media3:media3-exoplayer-hls:1.2.1")
     implementation("androidx.media3:media3-ui:1.2.1")
-
     
     // AndroidX Core libraries
     implementation("androidx.appcompat:appcompat:1.6.1")
