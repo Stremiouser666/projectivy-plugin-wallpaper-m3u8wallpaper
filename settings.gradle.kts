@@ -21,5 +21,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "projectivy-plugin-wallpaper-bingwallpaper"
-include(":api")
 include(":bingwallpaper")
+include(":api")
