@@ -1,7 +1,9 @@
 # Projectivy Wallpaper Plugin : m3u8 Wallpaper
 
-# Display m3u8 streams as a wallpaper for Projectivy Launcher.
 
+# Display m3u8 streams as a wallpaper for Projectivy Launcher.
+- This is a work in progress and may be buggy and not work as fully expected on all devices.
+  
 # Usage
 - Install the plugin to an Android Tv device with Projectivy Launcher installed
 - Go to Projectivy settings > Appearance > Wallpaper and choose "m3u8 Wallpaper" in the dropdown list
